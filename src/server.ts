@@ -1,11 +1,15 @@
-import fastify from "fastify";
+import fastify from 'fastify';
+import { knex } from './database';
 
-const app = fastify();
-
-app.get("/hello", () => {
-  return "Hello World !! Fastify";
+const app = fastify({
+  logger: true,
 });
 
-app.listen({ port: 3333 }).then(() => {
-  console.log("RODANDO NA PORTA", 3333);
-});
+app.get('/hello', async () => await knex('sqlite_schema').select('*'));
+
+try {
+  app.listen({ port: 3333 });
+} catch (err) {
+  app.log.error(err);
+  process.exit(1);
+}
