@@ -1,15 +1,13 @@
 import fastify from 'fastify';
-import { knex } from './database';
+import { env } from './env';
+import { transactionsRoutes } from './routes/transactions';
 
 const app = fastify({
   logger: true,
 });
 
-app.get('/hello', async () => await knex('sqlite_schema').select('*'));
+app.register(transactionsRoutes, {
+  prefix: 'transactions',
+});
 
-try {
-  app.listen({ port: 3333 });
-} catch (err) {
-  app.log.error(err);
-  process.exit(1);
-}
+app.listen({ port: env.PORT }).then(() => console.log('HTTP Server Running'));
