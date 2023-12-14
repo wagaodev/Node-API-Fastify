@@ -2,3 +2,4 @@
 /temp/
 db
 .env
+.env.test
